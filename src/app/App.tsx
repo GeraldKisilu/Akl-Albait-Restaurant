@@ -8,11 +8,21 @@ import {
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoImg from "@/imports/albait.png";
 
-// ─── EmailJS Config ───────────────────────────────────────────────────────────
+// ─── EmailJS Config (via env) ──────────────────────────────────────────────
+// IMPORTANT: In Vite, env vars must be prefixed with VITE_ to be exposed to the browser.
+// Create .env (next to package.json) and set:
+//   VITE_EMAILJS_SERVICE_ID=...
+//   VITE_EMAILJS_TEMPLATE_ID=...
+//   VITE_EMAILJS_PUBLIC_KEY=...
+//
+// Do NOT commit your .env to git.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const _importMetaEnv: any = (import.meta as any).env || {};
+
 const EJ = {
-  SERVICE_ID: "service_33j2r0p",
-  TEMPLATE_ID: "template_xcyvraw",
-  PUBLIC_KEY: "0A0RRRb-XycqVRZFA",
+  SERVICE_ID: _importMetaEnv.VITE_EMAILJS_SERVICE_ID as string,
+  TEMPLATE_ID: _importMetaEnv.VITE_EMAILJS_TEMPLATE_ID as string,
+  PUBLIC_KEY: _importMetaEnv.VITE_EMAILJS_PUBLIC_KEY as string,
 };
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -72,6 +82,13 @@ const IMG = {
   veg:     "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",
   dal:     "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop&auto=format",
   paneer:  "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&h=400&fit=crop&auto=format",
+  // Drinks (use unique images per product)
+  coke320: "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&h=400&fit=crop&auto=format",
+  pepsi330:"https://images.unsplash.com/photo-1514282405545-8d7b0f77e8f3?w=600&h=400&fit=crop&auto=format",
+  water500:"https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=400&fit=crop&auto=format",
+  coke15l: "https://images.unsplash.com/photo-1528823872057-9c018a7f5e5a?w=600&h=400&fit=crop&auto=format",
+  pepsi15l:"https://images.unsplash.com/photo-1554671883-9aa0d72b0c2c?w=600&h=400&fit=crop&auto=format",
+  // fallback if you don't have per-drink assets yet
   coke:    "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&h=400&fit=crop&auto=format",
   water:   "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=400&fit=crop&auto=format",
 };
@@ -263,18 +280,18 @@ const ITEMS: MenuItem[] = [
     image: IMG.veg },
   // ── SOFT DRINKS ──
   { id: "dr1", category: "Soft Drinks", name: "Coca-Cola Can (320ml)", price: 4,
-    description: "Ice-cold Coca-Cola, 320ml can.", image: IMG.coke },
+    description: "Ice-cold Coca-Cola, 320ml can.", image: IMG.coke320 },
   { id: "dr2", category: "Soft Drinks", name: "Pepsi Can (330ml)", price: 4,
-    description: "Chilled Pepsi, 330ml can.", image: IMG.coke },
+    description: "Chilled Pepsi, 330ml can.", image: IMG.pepsi330 },
   { id: "dr3", category: "Soft Drinks", name: "Water Bottle (500ml)", price: 1,
-    description: "Still mineral water, 500ml.", image: IMG.water },
+    description: "Still mineral water, 500ml.", image: IMG.water500 },
   { id: "dr4", category: "Soft Drinks", name: "Coca-Cola 1.5L", price: 2,
-    description: "Large bottle of Coca-Cola, 1.5 litres. Perfect for sharing.", image: IMG.coke },
+    description: "Large bottle of Coca-Cola, 1.5 litres. Perfect for sharing.", image: IMG.coke15l },
   { id: "dr5", category: "Soft Drinks", name: "Pepsi 1.5L", price: 5,
-    description: "Large bottle of Pepsi, 1.5 litres.", image: IMG.coke },
+    description: "Large bottle of Pepsi, 1.5 litres.", image: IMG.pepsi15l },
   { id: "dr6", category: "Soft Drinks", name: "Family Pack Soft Drink", price: 10,
     description: "Family-sized soft drink (2L–2.25L). Choose your brand.",
-    image: IMG.coke,
+    image: IMG.coke15l,
     customizations: [{ label: "Brand", choices: [{ name: "Coca-Cola" }, { name: "Pepsi" }, { name: "7Up" }] }] },
 ];
 
@@ -455,6 +472,7 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
   const { cart, removeItem, updateQty, clearCart, subtotal, tax, grandTotal, itemCount } = useCart();
   const [phase, setPhase] = useState<"cart" | "checkout" | "success">("cart");
   const [form, setForm] = useState({ name: "", email: "", phone: "", notes: "" });
+  const [emailError, setEmailError] = useState<string>("");
   const [sending, setSending] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [savedTotal, setSavedTotal] = useState(0);
@@ -463,8 +481,21 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
   useEffect(() => { if (!open) setTimeout(() => { setPhase("cart"); setError(""); }, 350); }, [open]);
 
   async function placeOrder() {
-    if (!form.name || !form.email) { setError("Name and email are required."); return; }
-    setSending(true); setError("");
+    // basic validation
+    if (!form.name || !form.email) {
+      setError("Name and email are required.");
+      return;
+    }
+
+    // If EmailJS env vars are not set, fail fast with a clear message.
+    if (!EJ.SERVICE_ID || !EJ.TEMPLATE_ID || !EJ.PUBLIC_KEY) {
+      setError("Email service is not configured. Please set VITE_EMAILJS_* env vars.");
+      return;
+    }
+
+    setSending(true);
+    setError("");
+
     const oid = genOrderId();
     const total = grandTotal;
 
@@ -1212,8 +1243,23 @@ function MenuPage() {
 
 // ─── Scroll To Top ────────────────────────────────────────────────────────────
 function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior }); }, [pathname]);
+  const location = useLocation();
+
+  useEffect(() => {
+    // Prevent browser from restoring previous scroll position on refresh.
+    // (Some browsers may otherwise try to preserve scroll.)
+    try {
+      if ("scrollRestoration" in window.history) {
+        window.history.scrollRestoration = "manual";
+      }
+    } catch {
+      // no-op
+    }
+
+    // HashRouter uses the hash portion for route; include both pathname and hash.
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, [location.pathname, location.hash]);
+
   return null;
 }
 
