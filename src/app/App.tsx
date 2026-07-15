@@ -93,7 +93,102 @@ const IMG = {
   water:   "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=400&fit=crop&auto=format",
 };
 
+type DealKey = "monthly_one" | "monthly_two" | "staff" | "events";
+
+const DEAL_ITEMS: Record<DealKey, MenuItem> = {
+  monthly_one: {
+    id: "deal_monthly_one",
+    category: "Meals & Deals",
+    name: "Monthly Meal — One Meal",
+    price: 180,
+    description: "Monthly meal deal for one meal. Freshly prepared and made to order.",
+    image:
+      "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&h=600&fit=crop&auto=format",
+    badge: "Monthly",
+    featured: true,
+  },
+  monthly_two: {
+    id: "deal_monthly_two",
+    category: "Meals & Deals",
+    name: "Monthly Meal — Two Meals",
+    price: 320,
+    description: "Monthly meal deal for two meals. Perfect for sharing or planning ahead.",
+    image:
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&h=600&fit=crop&auto=format",
+    badge: "Monthly",
+    featured: true,
+  },
+  staff: {
+    id: "deal_staff",
+    category: "Meals & Deals",
+    name: "Staff Meal",
+    price: 8,
+    description: "Staff meal starting from AED 8. Limited-time staff pricing.",
+    image:
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&h=600&fit=crop&auto=format",
+    badge: "Staff",
+  },
+  events: {
+    id: "deal_events",
+    category: "Meals & Deals",
+    name: "Events Meal",
+    price: 5,
+    description: "Events meal starting from AED 5. Great for groups and celebrations.",
+    image:
+      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=900&h=600&fit=crop&auto=format",
+    badge: "Events",
+  },
+};
+
+const MEALS_DEALS: Array<{
+  title: string;
+  badge?: string;
+  description: string;
+  image: string;
+  prices: Array<{ label: string; aed: number }>;
+  defaultAddKey: DealKey;
+  quickAdd: Array<{ key: DealKey; name: string }>;
+}> = [
+  {
+    title: "Monthly Meal",
+    badge: "Popular",
+    description: "180 AED for one meal. 320 AED for two meals — ideal for regular visits.",
+    image:
+      "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&h=600&fit=crop&auto=format",
+    prices: [
+      { label: "One meal", aed: 180 },
+      { label: "Two meals", aed: 320 },
+    ],
+    defaultAddKey: "monthly_one",
+    quickAdd: [
+      { key: "monthly_one", name: "One meal" },
+      { key: "monthly_two", name: "Two meals" },
+    ],
+  },
+  {
+    title: "Staff Meal",
+    badge: "Starting from",
+    description: "Staff pricing starts from AED 8. Ask in-store for availability.",
+    image:
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&h=600&fit=crop&auto=format",
+    prices: [{ label: "Starting from", aed: 8 }],
+    defaultAddKey: "staff",
+    quickAdd: [{ key: "staff", name: "AED 8" }],
+  },
+  {
+    title: "Events Meal",
+    badge: "Group deal",
+    description: "Events meal starts from AED 5 for group orders and celebrations.",
+    image:
+      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=900&h=600&fit=crop&auto=format",
+    prices: [{ label: "Starting from", aed: 5 }],
+    defaultAddKey: "events",
+    quickAdd: [{ key: "events", name: "AED 5" }],
+  },
+];
+
 const ITEMS: MenuItem[] = [
+
   // ── FRIED & CRISPY ──
   { id: "f1", category: "Fried & Crispy", name: "French Fries", price: 5,
     description: "Golden crispy fries seasoned to perfection.",
@@ -496,8 +591,6 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
     setSending(true);
     setError("");
 
-    const oid = genOrderId();
-    const total = grandTotal;
 
     const itemsList = cart.map((item, idx) => {
       const opts = Object.entries(item.customizations).map(([k, v]) => `${k}: ${v}`).join(", ");
@@ -701,9 +794,21 @@ function MenuPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [activeCat, setActiveCat] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
+  const ALL_MENU_CATEGORIES = [
+    ...CATEGORIES,
+    "Meals & Deals",
+  ];
+
+  const getCategoryItems = (cat: string) => {
+    if (cat === "Meals & Deals") return Object.values(DEAL_ITEMS);
+    return ITEMS.filter(i => i.category === cat);
+  };
+
+
   useEffect(() => { if (!open) setTimeout(() => setActiveCat(null), 300); }, [open]);
 
-  const catItems = activeCat ? ITEMS.filter(i => i.category === activeCat) : [];
+  const catItems = activeCat ? getCategoryItems(activeCat) : [];
+
 
   if (!open) return null;
 
@@ -741,17 +846,19 @@ function MenuPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
           <div className="max-w-2xl mx-auto">
             <p className="text-sm text-[#8b7355] mb-6 text-center">Select a category to explore</p>
             <div className="grid grid-cols-2 gap-4">
-              {CATEGORIES.map(cat => {
-                const sample = ITEMS.find(i => i.category === cat);
-                const count = ITEMS.filter(i => i.category === cat).length;
+              {ALL_MENU_CATEGORIES.map(cat => {
+                const sample = getCategoryItems(cat)[0];
+                const count = getCategoryItems(cat).length;
+
                 return (
                   <button key={cat} onClick={() => setActiveCat(cat)}
                     className="group relative overflow-hidden rounded-2xl aspect-[4/3] text-left bg-[#241a0a] border border-[#D4A853]/15 hover:border-[#D4A853]/50 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/50">
                     {sample && <img src={sample.image} alt={cat} className="absolute inset-0 w-full h-full object-cover opacity-35 group-hover:opacity-55 transition-opacity duration-500" />}
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1C140C]/95 to-transparent" />
                     <div className="absolute bottom-0 p-4">
-                      <h3 className="text-[#F2E3C9] font-bold font-['Playfair_Display'] text-lg leading-tight">{cat}</h3>
-                      <p className="text-[#8b7355] text-xs mt-0.5">{count} dishes</p>
+                  <h3 className="text-[#F2E3C9] font-bold font-['Playfair_Display'] text-lg leading-tight">{cat}</h3>
+                      <p className="text-[#8b7355] text-xs mt-0.5">{count} items</p>
+
                     </div>
                     <ChevronRight size={15} className="absolute top-3 right-3 text-[#D4A853] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </button>
@@ -822,15 +929,16 @@ function Navbar() {
           <Link to="/about" className="hidden sm:inline-flex items-center text-sm text-[#F2E3C9]/70 hover:text-[#D4A853] transition-colors px-3 py-1.5 rounded-lg hover:bg-[#241a0a]">
             Our Story
           </Link>
-          <button onClick={openMenu}
+            <button onClick={openMenu}
             className="flex items-center gap-1.5 text-sm text-[#F2E3C9] hover:text-[#D4A853] transition-colors px-3 py-1.5 rounded-lg hover:bg-[#241a0a] border border-[#D4A853]/20 hover:border-[#D4A853]/50">
             <MenuIcon size={15} />
             <span className="hidden sm:inline font-medium">Menu</span>
           </button>
+
           <button onClick={openBasket}
             className="relative flex items-center gap-2 bg-[#C8622A] hover:bg-[#b5541f] text-white text-sm px-3 py-1.5 rounded-lg transition-colors font-medium">
             <ShoppingCart size={15} />
-            {itemCount > 0 ? <span>{itemCount}</span> : <span className="hidden sm:inline">Basket</span>}
+          {itemCount > 0 ? <span>{itemCount}</span> : <span className="hidden sm:inline">Basket</span>}
           </button>
         </div>
       </div>
@@ -1108,6 +1216,7 @@ function HomePage() {
 function AboutPage() {
   return (
     <div className="bg-[#1C140C] min-h-screen">
+
       {/* Hero */}
       <section className="relative h-[55vh] flex items-end overflow-hidden">
         <div className="absolute inset-0 bg-[#1C140C]">
@@ -1177,10 +1286,111 @@ function AboutPage() {
   );
 }
 // ─── Menu Page ────────────────────────────────────────────────────────────────
+function MealsDealsPage() {
+  const { addItem } = useCart();
+
+  useEffect(() => {
+    // Provide a small bridge for the onClick handlers above.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).__bb_add_deal = (item: MenuItem) => {
+      addItem({
+        cartId: uid(),
+        id: item.id,
+        name: item.name,
+        price: item.price,
+        quantity: 1,
+        customizations: {},
+        note: "",
+        image: item.image,
+      });
+    };
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).__bb_add_deal = undefined;
+    };
+  }, [addItem]);
+
+  return (
+    <div className="min-h-screen bg-[#1C140C]">
+      <div className="pt-[104px] pb-10 px-4 sm:px-6 border-b border-[#D4A853]/15">
+        <div className="max-w-7xl mx-auto text-center">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4A853] mb-2 font-semibold">Monthly Deals · Staff Meal · Events</p>
+          <h1 className="text-4xl font-bold text-[#F2E3C9] font-['Playfair_Display']">Meals & Deals</h1>
+          <p className="text-[#8b7355] mt-2 text-sm">Add these offers to your basket like regular menu items.</p>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {MEALS_DEALS.map(d => (
+            <div key={d.title} className="bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl overflow-hidden shadow-sm">
+              <div className="relative h-56 bg-[#1a1208]">
+                <img src={d.image} alt={d.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#241a0a]/70 to-transparent" />
+                {d.badge && (
+                  <span className="absolute top-3 left-3 bg-[#C8622A] text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
+                    {d.badge}
+                  </span>
+                )}
+              </div>
+              <div className="p-5">
+                <h2 className="text-xl font-bold text-[#F2E3C9] font-['Playfair_Display'] mb-2">{d.title}</h2>
+                <p className="text-sm text-[#8b7355] leading-relaxed">{d.description}</p>
+
+                <div className="mt-4 space-y-2">
+                  {d.prices.map(p => (
+                    <div key={p.label} className="flex items-center justify-between gap-3 text-sm">
+                      <span className="text-[#8b7355] font-semibold">{p.label}</span>
+                      <span className="text-[#D4A853] font-bold">AED {p.aed}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 flex flex-col gap-2">
+                  {d.quickAdd.map(q => (
+                    <button
+                      key={q.name}
+                      onClick={() => {
+                        const item = DEAL_ITEMS[q.key];
+                        // Use ItemModal-like add (no customizations for deals)
+                        // Cart price is base price.
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (window as any).__bb_add_deal?.(item);
+                      }}
+                      className="w-full py-3 bg-[#C8622A] hover:bg-[#b5541f] text-white rounded-xl font-bold transition-colors text-sm"
+                    >
+                      Add {q.name}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => {
+                      const targetKey = d.defaultAddKey;
+                      const item = DEAL_ITEMS[targetKey];
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                      (window as any).__bb_add_deal?.(item);
+                    }}
+                    className="w-full py-3 border border-[#D4A853]/25 text-[#F2E3C9] hover:border-[#D4A853]/60 hover:bg-[#D4A853]/5 rounded-xl font-semibold transition-colors text-sm"
+                  >
+                    Quick Add Offer
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <Footer />
+    </div>
+  );
+}
+
 function MenuPage() {
+
   const [activeCat, setActiveCat] = useState("All");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const displayed = activeCat === "All" ? ITEMS : ITEMS.filter(i => i.category === activeCat);
+
 
   return (
     <div className="min-h-screen bg-[#1C140C]">
@@ -1290,9 +1500,11 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/menu" element={<MenuPage />} />
+            <Route path="/meals-deals" element={<MealsDealsPage />} />
           </Routes>
         </Layout>
       </CartProvider>
     </HashRouter>
   );
 }
+
