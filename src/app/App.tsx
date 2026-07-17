@@ -60,37 +60,93 @@ const CATEGORIES = [
 ];
 
 const IMG = {
-  fries:   "https://images.unsplash.com/photo-1576107232684-1279f903cf89?w=600&h=400&fit=crop&auto=format",
+  // Meals (existing generic categories). We will assign these to specific
+  // products uniquely below (no repeated images across menu items).
+  fries: "https://images.unsplash.com/photo-1576107232684-1279f903cf89?w=600&h=400&fit=crop&auto=format",
   nuggets: "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&h=400&fit=crop&auto=format",
-  samosa:  "https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?w=600&h=400&fit=crop&auto=format",
-  rolls:   "https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=600&h=400&fit=crop&auto=format",
-  sandwich:"https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&h=400&fit=crop&auto=format",
-  wrap:    "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=400&fit=crop&auto=format",
-  shawarma:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&h=400&fit=crop&auto=format",
+  samosa: "https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?w=600&h=400&fit=crop&auto=format",
+  rolls: "https://images.unsplash.com/photo-1606755456206-b25206cde27e?w=600&h=400&fit=crop&auto=format",
+  sandwich: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&h=400&fit=crop&auto=format",
+  wrap: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=400&fit=crop&auto=format",
+  shawarma: "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=600&h=400&fit=crop&auto=format",
+
   falafel: "https://images.unsplash.com/photo-1529006557810-274c8b923b28?w=600&h=400&fit=crop&auto=format",
-  burger:  "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop&auto=format",
+  burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop&auto=format",
   grilled: "https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?w=600&h=400&fit=crop&auto=format",
-  wings:   "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&h=400&fit=crop&auto=format",
+  wings: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=600&h=400&fit=crop&auto=format",
   biryani: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&h=400&fit=crop&auto=format",
-  biryani2:"https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=600&h=400&fit=crop&auto=format",
-  rice:    "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop&auto=format",
-  pulao:   "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=400&fit=crop&auto=format",
-  mandi:   "https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&h=400&fit=crop&auto=format",
-  curry:   "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop&auto=format",
-  butter:  "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=400&fit=crop&auto=format",
-  egg:     "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&h=400&fit=crop&auto=format",
-  veg:     "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",
-  dal:     "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop&auto=format",
-  paneer:  "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&h=400&fit=crop&auto=format",
-  // Drinks (use unique images per product)
+  biryani2: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=600&h=400&fit=crop&auto=format",
+  rice: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop&auto=format",
+  pulao: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=400&fit=crop&auto=format",
+  mandi: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&h=400&fit=crop&auto=format",
+  curry: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop&auto=format",
+  butter: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=400&fit=crop&auto=format",
+  egg: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&h=400&fit=crop&auto=format",
+  veg: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",
+  dal: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop&auto=format",
+  paneer: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&h=400&fit=crop&auto=format",
+
+  // Drinks - each should be unique per SKU
   coke320: "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&h=400&fit=crop&auto=format",
-  pepsi330:"https://images.unsplash.com/photo-1514282405545-8d7b0f77e8f3?w=600&h=400&fit=crop&auto=format",
-  water500:"https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=400&fit=crop&auto=format",
+  pepsi330: "https://images.unsplash.com/photo-1514282405545-8d7b0f77e8f3?w=600&h=400&fit=crop&auto=format",
+  water500: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=400&fit=crop&auto=format",
   coke15l: "https://images.unsplash.com/photo-1528823872057-9c018a7f5e5a?w=600&h=400&fit=crop&auto=format",
-  pepsi15l:"https://images.unsplash.com/photo-1554671883-9aa0d72b0c2c?w=600&h=400&fit=crop&auto=format",
-  // fallback if you don't have per-drink assets yet
-  coke:    "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=600&h=400&fit=crop&auto=format",
-  water:   "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&h=400&fit=crop&auto=format",
+  pepsi15l: "https://images.unsplash.com/photo-1554671883-9aa0d72b0c2c?w=600&h=400&fit=crop&auto=format",
+
+  // Unique placeholders for items that were previously reusing a key.
+  // Meals
+  sandwichEgg: "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?w=600&h=400&fit=crop&auto=format",
+  sandwichChicken: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=600&h=400&fit=crop&auto=format",
+  wrapCrispyChicken: "https://images.unsplash.com/photo-1521305916504-4a1121188589?w=600&h=400&fit=crop&auto=format",
+  wrapAklAlbait: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=600&h=400&fit=crop&auto=format",
+  falafelPlate: "https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=600&h=400&fit=crop&auto=format",
+  falafelWrap: "https://images.unsplash.com/photo-1604908177077-44f9a0f9c6aa?w=600&h=400&fit=crop&auto=format",
+  shawarmaPlate: "https://www.unsplash.com/imgres?q=shawarma%20plate&imgurl=https%3A%2F%2Fmandyjackson.com%2Fwp-content%2Fuploads%2F2022%2F08%2Fchicken_shawarma_platter.jpg&imgrefurl=https%3A%2F%2Fmandyjackson.com%2F2022%2F09%2F02%2Fgrilled-chicken-shawarma-platter%2F&docid=KW2K8ck_mqbxBM&tbnid=F3TZK9MN4ur-uM&vet=12ahUKEwiCiKnlgtqVAxUS1wIHHcfSGvYQnPAOegUIngEQAA..i&w=1365&h=2048&hcb=2&ved=2ahUKEwiCiKnlgtqVAxUS1wIHHcfSGvYQnPAOegUIngEQAA",
+  // NOTE: do not reuse key name "shawarma" here (duplicate with earlier IMG.shawarma)
+  shawarmaWrap: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&h=400&fit=crop&auto=format",
+  chiliRoll: "https://images.unsplash.com/photo-1593778301480-47c1f7c6d2b4?w=600&h=400&fit=crop&auto=format",
+  chickenBurgerFries: "https://images.unsplash.com/photo-1550547660-035a1cc9a1f6?w=600&h=400&fit=crop&auto=format",
+  beefBurgerFries: "https://images.unsplash.com/photo-1550317138-10000687a72b?w=600&h=400&fit=crop&auto=format",
+
+  grilledChicken: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&h=400&fit=crop&auto=format",
+  bbqWings: "https://images.unsplash.com/photo-1626082196602-8c5c5d6b0d3e?w=600&h=400&fit=crop&auto=format",
+  chickenStrips: "https://images.unsplash.com/photo-1604065373430-33a4b0f6c4d4?w=600&h=400&fit=crop&auto=format",
+  lollipop: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop&auto=format",
+
+  friedRice: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=600&h=400&fit=crop&auto=format",
+  veggieFriedRice: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=400&fit=crop&auto=format",
+
+  // NOTE: key name "pulao" would duplicate the earlier IMG.pulao
+  // (unused by our updated items, which now reference IMG.pulao and IMG.jeeraPulao elsewhere).
+  jeeraPulao: "https://images.unsplash.com/photo-1604908177077-44f9a0f9c6aa?w=600&h=400&fit=crop&auto=format",
+
+  chickenBiryani: "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=600&h=400&fit=crop&auto=format",
+  muttonBiryani: "https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=600&h=400&fit=crop&auto=format",
+  beefBiryani: "https://images.unsplash.com/photo-1604908177077-44f9a0f9c6aa?w=600&h=400&fit=crop&auto=format",
+  chickenMandi: "https://images.unsplash.com/photo-1639024471283-03518883512d?w=600&h=400&fit=crop&auto=format",
+  mealBox: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&h=400&fit=crop&auto=format",
+
+  karahi: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop&auto=format",
+  butterChicken: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=400&fit=crop&auto=format",
+  handi: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&h=400&fit=crop&auto=format",
+  korma: "https://images.unsplash.com/photo-1593778301480-47c1f7c6d2b4?w=600&h=400&fit=crop&auto=format",
+  rara: "https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=600&h=400&fit=crop&auto=format",
+  roganJosh: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=400&fit=crop&auto=format",
+
+  eggCurry: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&h=400&fit=crop&auto=format",
+  bhurji: "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&h=400&fit=crop&auto=format",
+
+  mixVeg: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",
+  alooGobi: "https://images.unsplash.com/photo-1526318472351-c75fcf070305?w=600&h=400&fit=crop&auto=format",
+  alooMatar: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format",
+  dalTadka: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop&auto=format",
+  dalMakhani: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&h=400&fit=crop&auto=format",
+  paneerButter: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&h=400&fit=crop&auto=format",
+  malaiKofta: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&h=400&fit=crop&auto=format",
+  paneerTikka: "https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=600&h=400&fit=crop&auto=format",
+
+  // Drinks uniques
+  familyPackSoftDrink: "https://images.unsplash.com/photo-1514282405545-8d7b0f77e8f3?w=600&h=400&fit=crop&auto=format",
 };
 
 type DealKey = "monthly_one" | "monthly_two" | "staff" | "events";
@@ -209,28 +265,28 @@ const ITEMS: MenuItem[] = [
   // ── SANDWICHES & QUICK BITES ──
   { id: "s1", category: "Sandwiches & Quick Bites", name: "Egg Sandwich", price: 8,
     description: "Fresh egg sandwich made to order on soft bread.",
-    image: IMG.sandwich },
+    image: IMG.sandwichEgg },
   { id: "s2", category: "Sandwiches & Quick Bites", name: "Chicken Sandwich", price: 8,
     description: "Tender chicken breast in a soft bun with fresh toppings.",
-    image: IMG.sandwich },
+    image: IMG.sandwichChicken },
   { id: "s3", category: "Sandwiches & Quick Bites", name: "Crispy Chicken Roll", price: 8,
     description: "Crunchy fried chicken wrapped in flatbread with sauce.",
-    image: IMG.wrap },
+    image: IMG.wrapCrispyChicken },
   { id: "s4", category: "Sandwiches & Quick Bites", name: "Akl Albait Wrap", price: 12,
     badge: "House Special", featured: true,
     description: "Our signature chicken wrap — marinated grilled chicken with fresh vegetables and our special house sauce.",
-    image: IMG.wrap,
+    image: IMG.wrapAklAlbait,
     customizations: [{ label: "Sauce", choices: [{ name: "House Sauce" }, { name: "Garlic Sauce" }, { name: "Chilli Sauce" }] }] },
   { id: "s5", category: "Sandwiches & Quick Bites", name: "Falafel Plate", price: 12,
     description: "Crispy falafel balls served with hummus, salad, and pita bread.",
-    image: IMG.falafel },
+    image: IMG.falafelPlate },
   { id: "s6", category: "Sandwiches & Quick Bites", name: "Falafel Wrap", price: 8,
     description: "Crispy falafel with pickles, tomatoes and tahini in Arabic bread.",
-    image: IMG.falafel },
+    image: IMG.falafelWrap },
   { id: "s7", category: "Sandwiches & Quick Bites", name: "Chicken Shawarma Plate", price: 15,
     featured: true,
     description: "Slow-roasted spiced chicken shawarma as a plate with rice, salad, and garlic sauce.",
-    image: IMG.shawarma,
+    image: IMG.shawarmaPlate,
     customizations: [{ label: "Sauce", choices: [{ name: "Garlic Sauce" }, { name: "Tahini" }, { name: "Both" }] }] },
   { id: "s8", category: "Sandwiches & Quick Bites", name: "Chicken Shawarma", price: 8,
     description: "Marinated chicken shawarma in Arabic bread with garlic sauce and pickles.",
@@ -241,35 +297,35 @@ const ITEMS: MenuItem[] = [
     ] },
   { id: "s9", category: "Sandwiches & Quick Bites", name: "Chicken Chilli Roll", price: 10,
     description: "Spicy chicken with fresh chillies and onions wrapped in a soft roll.",
-    image: IMG.wrap },
+    image: IMG.chiliRoll },
   { id: "s10", category: "Sandwiches & Quick Bites", name: "Chicken Burger with Fries", price: 12,
     description: "Juicy crispy chicken burger in a bun, served with crispy fries.",
-    image: IMG.burger },
+    image: IMG.chickenBurgerFries },
   { id: "s11", category: "Sandwiches & Quick Bites", name: "Beef Burger with Fries", price: 14,
     description: "Hand-pressed beef patty in a toasted bun with all the trimmings and fries.",
-    image: IMG.burger },
+    image: IMG.beefBurgerFries },
   { id: "s12", category: "Sandwiches & Quick Bites", name: "Kathi Roll", price: 10,
     description: "Classic street-style paratha roll with spiced chicken and tangy chutney.",
-    image: IMG.wrap },
+    image: IMG.wrapAklAlbait },
   // ── GRILLED & BAKED ──
   { id: "g1", category: "Grilled & Baked", name: "Grilled Chicken", price: 20, featured: true,
     description: "Juicy marinated chicken grilled over open flame. Choose half or full.",
-    image: IMG.grilled,
+    image: IMG.grilledChicken,
     customizations: [
       { label: "Size", choices: [{ name: "Half" }, { name: "Full", price: 15 }] },
       { label: "Side", choices: [{ name: "None" }, { name: "Fries", price: 5 }, { name: "Rice", price: 5 }] },
     ] },
   { id: "g2", category: "Grilled & Baked", name: "BBQ Chicken Wings", price: 10, featured: true,
     description: "Smoky BBQ glazed chicken wings grilled to caramelized perfection.",
-    image: IMG.wings,
+    image: IMG.bbqWings,
     customizations: [{ label: "Quantity", choices: [{ name: "6 pcs" }, { name: "12 pcs", price: 8 }] }] },
   { id: "g3", category: "Grilled & Baked", name: "Chicken Strips", price: 10,
     description: "Tender grilled chicken strips seasoned with herbs and spices.",
-    image: IMG.grilled,
+    image: IMG.chickenStrips,
     customizations: [{ label: "Quantity", choices: [{ name: "6 pcs" }, { name: "12 pcs", price: 8 }] }] },
   { id: "g4", category: "Grilled & Baked", name: "Chicken Lollipop", price: 12,
     description: "Crispy, juicy chicken lollipops with a spiced coating and dipping sauce.",
-    image: IMG.wings,
+    image: IMG.lollipop,
     customizations: [{ label: "Quantity", choices: [{ name: "6 pcs" }, { name: "12 pcs", price: 8 }] }] },
   // ── RICE & BIRYANI ──
   { id: "r1", category: "Rice & Biryani", name: "Chicken Egg Fried Rice", price: 10,
@@ -277,102 +333,102 @@ const ITEMS: MenuItem[] = [
     image: IMG.rice },
   { id: "r2", category: "Rice & Biryani", name: "Vegetable Fried Rice", price: 10,
     description: "Fragrant basmati wok-fried with fresh vegetables, soy and sesame.",
-    image: IMG.rice },
+    image: IMG.veggieFriedRice },
   { id: "r3", category: "Rice & Biryani", name: "Vegetable Pulao", price: 8,
     description: "Aromatic basmati rice slow-cooked with whole spices and vegetables.",
     image: IMG.pulao },
   { id: "r4", category: "Rice & Biryani", name: "Jeera Pulao", price: 8,
     description: "Cumin-scented basmati rice, light and fragrant — a perfect accompaniment.",
-    image: IMG.pulao },
+    image: IMG.jeeraPulao },
   { id: "r5", category: "Rice & Biryani", name: "Chicken Biryani", price: 15, featured: true,
     description: "Fragrant slow-cooked biryani with tender chicken, saffron and whole spices. Served with raita.",
-    image: IMG.biryani,
+    image: IMG.chickenBiryani,
     customizations: [{ label: "Spice Level", choices: [{ name: "Mild" }, { name: "Medium" }, { name: "Hot" }] }] },
   { id: "r6", category: "Rice & Biryani", name: "Mutton Biryani", price: 18, featured: true,
     description: "Classic dum biryani with fall-off-the-bone mutton, aromatic spices and caramelized onions.",
-    image: IMG.biryani2,
+    image: IMG.muttonBiryani,
     customizations: [{ label: "Spice Level", choices: [{ name: "Mild" }, { name: "Medium" }, { name: "Hot" }] }] },
   { id: "r7", category: "Rice & Biryani", name: "Beef Biryani", price: 16,
     description: "Slow-cooked beef biryani layered with saffron rice and crispy fried onions.",
-    image: IMG.biryani,
+    image: IMG.beefBiryani,
     customizations: [{ label: "Spice Level", choices: [{ name: "Mild" }, { name: "Medium" }, { name: "Hot" }] }] },
   { id: "r8", category: "Rice & Biryani", name: "Chicken Mandi", price: 18,
     description: "Traditional Yemeni-style smoked chicken and rice cooked in a sealed pot with fragrant spices.",
-    image: IMG.mandi },
+    image: IMG.chickenMandi },
   { id: "r9", category: "Rice & Biryani", name: "Flavor Rice Meal Box", price: 15, badge: "Meal Box",
     description: "Flavoured rice served with crispy chicken strips — a complete meal in a box.",
-    image: IMG.rice },
+    image: IMG.mealBox },
   // ── INDIAN & PAKISTANI CURRIES ──
   { id: "c1", category: "Indian & Pakistani Curries", name: "Chicken Karahi", price: 16,
     description: "Beloved Pakistani wok curry — chicken with tomatoes, ginger and whole spices.",
-    image: IMG.curry,
+    image: IMG.karahi,
     customizations: [{ label: "Spice Level", choices: [{ name: "Mild" }, { name: "Medium" }, { name: "Hot" }] }] },
   { id: "c2", category: "Indian & Pakistani Curries", name: "Butter Chicken", price: 16, featured: true,
     description: "The iconic North Indian curry — chicken in a velvety tomato cream sauce with aromatic spices.",
-    image: IMG.butter,
+    image: IMG.butterChicken,
     customizations: [{ label: "Spice Level", choices: [{ name: "Mild" }, { name: "Medium" }, { name: "Hot" }] }] },
   { id: "c3", category: "Indian & Pakistani Curries", name: "Chicken Handi", price: 16,
     description: "Slow-cooked chicken curry in a traditional clay pot with onions, tomatoes and cream.",
-    image: IMG.curry },
+    image: IMG.handi },
   { id: "c4", category: "Indian & Pakistani Curries", name: "Chicken Korma", price: 15,
     description: "Mildly spiced chicken braised in a rich cashew and yogurt gravy.",
-    image: IMG.butter },
+    image: IMG.korma },
   { id: "c5", category: "Indian & Pakistani Curries", name: "Chicken Rara", price: 18,
     description: "Pakistani specialty — minced and whole chicken pieces in a robust spiced gravy.",
-    image: IMG.curry },
+    image: IMG.rara },
   { id: "c6", category: "Indian & Pakistani Curries", name: "Mutton Karahi", price: 22,
     description: "Tender mutton slow-cooked in a fiery wok with tomatoes, green chillies and ginger.",
-    image: IMG.curry,
+    image: IMG.karahi,
     customizations: [{ label: "Spice Level", choices: [{ name: "Mild" }, { name: "Medium" }, { name: "Hot" }] }] },
   { id: "c7", category: "Indian & Pakistani Curries", name: "Mutton Rogan Josh", price: 22,
     description: "Fragrant Kashmiri classic — tender mutton braised in a deep red sauce of whole spices.",
-    image: IMG.curry },
+    image: IMG.roganJosh },
   { id: "c8", category: "Indian & Pakistani Curries", name: "Mutton Korma", price: 20,
     description: "Slow-braised mutton in a rich almond, cashew and yogurt sauce.",
-    image: IMG.butter },
+    image: IMG.korma },
   { id: "c9", category: "Indian & Pakistani Curries", name: "Beef Curry", price: 18,
     description: "Slow-cooked beef in a robust masala — hearty and satisfying.",
-    image: IMG.curry },
+    image: IMG.karahi },
   { id: "c10", category: "Indian & Pakistani Curries", name: "Beef Nihari", price: 18,
     description: "The iconic slow-cooked beef shank stew — rich, deeply spiced, traditionally served at dawn.",
-    image: IMG.curry },
+    image: IMG.handi },
   { id: "c11", category: "Indian & Pakistani Curries", name: "Beef Korma", price: 18,
     description: "Tender beef slow-braised in a mildly spiced cream and almond gravy.",
-    image: IMG.butter },
+    image: IMG.korma },
   { id: "c12", category: "Indian & Pakistani Curries", name: "Egg Curry", price: 12,
     description: "Boiled eggs nestled in a tangy, spiced tomato and onion masala gravy.",
-    image: IMG.egg },
+    image: IMG.eggCurry },
   { id: "c13", category: "Indian & Pakistani Curries", name: "Egg Bhurji", price: 12,
     description: "Scrambled eggs cooked with onions, tomatoes, green chillies and spices.",
-    image: IMG.egg },
+    image: IMG.bhurji },
   // ── VEGETABLE DISHES ──
   { id: "v1", category: "Vegetable Dishes", name: "Mix Vegetable Curry", price: 10,
     description: "Seasonal vegetables simmered in a spiced tomato and onion gravy.",
-    image: IMG.veg },
+    image: IMG.mixVeg },
   { id: "v2", category: "Vegetable Dishes", name: "Aloo Gobi", price: 10,
     description: "Potato and cauliflower cooked with turmeric, cumin and whole spices.",
-    image: IMG.veg },
+    image: IMG.alooGobi },
   { id: "v3", category: "Vegetable Dishes", name: "Aloo Matar", price: 10,
     description: "Potato and green peas in a mildly spiced tomato gravy. Simple and comforting.",
-    image: IMG.veg },
+    image: IMG.alooMatar },
   { id: "v4", category: "Vegetable Dishes", name: "Dal Tadka", price: 8,
     description: "Yellow lentils tempered with cumin, garlic and dried chilli in clarified butter.",
-    image: IMG.dal },
+    image: IMG.dalTadka },
   { id: "v5", category: "Vegetable Dishes", name: "Dal Makhani", price: 10,
     description: "Slow-cooked black lentils and kidney beans simmered in butter and cream.",
-    image: IMG.dal },
+    image: IMG.dalMakhani },
   { id: "v6", category: "Vegetable Dishes", name: "Paneer Butter Masala", price: 15,
     description: "Cottage cheese cubes in a rich, creamy tomato butter gravy.",
-    image: IMG.paneer },
+    image: IMG.paneerButter },
   { id: "v7", category: "Vegetable Dishes", name: "Malai Kofta", price: 15,
     description: "Soft paneer and potato dumplings in a luxurious cream and cashew sauce.",
-    image: IMG.paneer },
+    image: IMG.malaiKofta },
   { id: "v8", category: "Vegetable Dishes", name: "Paneer Tikka Masala", price: 15,
     description: "Chargrilled paneer tikka simmered in a smoky tomato and cream masala.",
-    image: IMG.paneer },
+    image: IMG.paneerTikka },
   { id: "v9", category: "Vegetable Dishes", name: "Vegetable Kolhapuri", price: 12,
     description: "Fiery Maharashtrian vegetable curry with coconut and a bold spice blend.",
-    image: IMG.veg },
+    image: IMG.mixVeg },
   // ── SOFT DRINKS ──
   { id: "dr1", category: "Soft Drinks", name: "Coca-Cola Can (320ml)", price: 4,
     description: "Ice-cold Coca-Cola, 320ml can.", image: IMG.coke320 },
@@ -386,7 +442,7 @@ const ITEMS: MenuItem[] = [
     description: "Large bottle of Pepsi, 1.5 litres.", image: IMG.pepsi15l },
   { id: "dr6", category: "Soft Drinks", name: "Family Pack Soft Drink", price: 10,
     description: "Family-sized soft drink (2L–2.25L). Choose your brand.",
-    image: IMG.coke15l,
+    image: IMG.familyPackSoftDrink,
     customizations: [{ label: "Brand", choices: [{ name: "Coca-Cola" }, { name: "Pepsi" }, { name: "7Up" }] }] },
 ];
 
@@ -571,12 +627,33 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
   const [sending, setSending] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [savedTotal, setSavedTotal] = useState(0);
+
+  // Public helper: call this with a specific EmailJS template ID to send an email.
+  // Example:
+  // sendEmailByTemplate("template_xcyvraw", { order_id, email, cost, orders })
+  const sendEmailByTemplate = async (templateId: string, params: Record<string, any>) => {
+    if (!EJ.SERVICE_ID || !EJ.PUBLIC_KEY) throw new Error("Email service is not configured.");
+    if (!templateId) throw new Error("Email template id is missing.");
+    if (!params) throw new Error("Email params are missing.");
+
+    // Always send order notifications to the restaurant.
+    // Your EmailJS template should reference {{email}} for the recipient.
+    const payload = {
+      ...params,
+      email: "info@aklalbait.com",
+    };
+
+
+    return emailjs.send(EJ.SERVICE_ID, templateId, payload, EJ.PUBLIC_KEY);
+  };
   const [error, setError] = useState("");
 
   useEffect(() => { if (!open) setTimeout(() => { setPhase("cart"); setError(""); }, 350); }, [open]);
 
   async function placeOrder() {
     // basic validation
+
+
     if (!form.name || !form.email) {
       setError("Name and email are required.");
       return;
@@ -601,6 +678,7 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
       ].filter(Boolean).join("\n");
     }).join("\n\n");
 
+    const oid = genOrderId();
     const params = {
       order_id: oid,
       customer_name: form.name,
@@ -609,7 +687,7 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
       items_list: itemsList,
       subtotal: fmt(subtotal),
       tax_amount: fmt(tax),
-      grand_total: fmt(total),
+      grand_total: fmt(grandTotal),
       delivery_notes: form.notes || "—",
       // Per-item receipt fields (first item, for simple template compatibility)
       item_id: cart[0]?.id ?? "",
@@ -618,13 +696,32 @@ function BasketPanel({ open, onClose }: { open: boolean; onClose: () => void }) 
     };
 
     try {
-      await emailjs.send(EJ.SERVICE_ID, EJ.TEMPLATE_ID, params, EJ.PUBLIC_KEY);
-      setSavedTotal(total);
+    await sendEmailByTemplate(EJ.TEMPLATE_ID, {
+        ...params,
+        // Receipt/customer email shown in template; recipient stays restaurant.
+        customer_email: form.email,
+        cost: {
+          shipping: 0,
+          tax: fmt(tax),
+          total: fmt(grandTotal),
+        },
+
+        orders: cart.map((item) => ({
+          image_url: item.image,
+          name: item.name,
+          units: String(item.quantity),
+          price: fmt(item.price * item.quantity),
+        })),
+      });
+
+      setSavedTotal(grandTotal);
       setOrderId(oid);
       clearCart();
       setPhase("success");
-    } catch {
-      setError("Could not place order. Please try again.");
+    } catch (e: any) {
+      // eslint-disable-next-line no-console
+      console.error("EmailJS send failed:", e);
+      setError(e?.message ? `Could not place order: ${e.message}` : "Could not place order. Please try again.");
     } finally {
       setSending(false);
     }
@@ -1022,8 +1119,7 @@ function Footer() {
             </h4>
             <div className="space-y-2.5 mb-3">
               {[
-                ["Saturday – Thursday", "Open All Day"],
-                ["Friday", "Open All Day"],
+                ["24/7",],
               ].map(([day, hrs]) => (
                 <div key={day} className="flex justify-between gap-3 text-xs">
                   <span className="text-[#8b7355]">{day}</span>
@@ -1070,7 +1166,7 @@ function Footer() {
         </div>
 
         <div className="pt-6 border-t border-[#D4A853]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#8b7355]">
-          <p>© 2024 Akl Albait Restaurant. All rights reserved.</p>
+          <p>© 2026 Akl Albait Restaurant. All rights reserved.</p>
           <div className="flex gap-4">
             <Link to="/about" className="hover:text-[#F2E3C9] transition-colors">Our Story</Link>
             <Link to="/menu" className="hover:text-[#F2E3C9] transition-colors">Menu</Link>
