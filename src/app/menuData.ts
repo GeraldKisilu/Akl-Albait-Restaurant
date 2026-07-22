@@ -80,10 +80,121 @@ export const menuItems: MenuItem[] = [
   { id: 'dr5', name: 'Pepsi 1.5L', price: 'AED 5', img: 'https://images.unsplash.com/photo-1741519425149-e353fce02897?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVwc2klMjAxLjVsfGVufDB8fDB8fHww', category: 'Soft Drinks' },
   { id: 'dr6', name: 'Family Pack Soft Drink', price: 'AED 10', img: 'https://images.unsplash.com/photo-1527960471264-932f39eb5846?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8c29mdCUyMGRyaW5rc3xlbnwwfHwwfHx8MA%3D%3D', category: 'Soft Drinks' },
 
-  // Meals & Deals
-  { id: 'deal_monthly_one', name: 'Monthly Meal — One Meal', price: 'AED 180', img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&h=400&fit=crop&auto=format', category: 'Meals & Deals' },
-  { id: 'deal_monthly_two', name: 'Monthly Meal — Two Meals', price: 'AED 320', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format', category: 'Meals & Deals' },
-  { id: 'deal_staff', name: 'Staff Meal', price: 'AED 8', img: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&h=400&fit=crop&auto=format', category: 'Meals & Deals' },
-  { id: 'deal_events', name: 'Events Meal', price: 'AED 5', img: 'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=600&h=400&fit=crop&auto=format', category: 'Meals & Deals' },
-];
+  // Meals & Deals (Monthly Mass Menu Schedule)
+  { 
+    id: 'deal_monthly_one', 
+    name: 'Monthly Meal — One Meal Option', 
+    price: 'AED 180', 
+    img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&h=400&fit=crop&auto=format', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'deal_monthly_two', 
+    name: 'Monthly Meal — Two Meal Option', 
+    price: 'AED 320', 
+    img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop&auto=format', 
+    category: 'Meals & Deals' 
+  },
 
+  // --- LUNCH MENU ---
+  { 
+    id: 'lunch_mon', 
+    name: 'Monday Lunch: Chicken Masala + Chef Choice Veg + Steamed Rice 500gm', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1708782344490-9026aaa5eec7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2hpY2tlbiUyMG1hc2FsYXxlbnwwfHwwfHx8MA%3D%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'lunch_tue', 
+    name: 'Tuesday Lunch: Egg Korma + Chef Choice Veg + Steamed Rice 500gm', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1710445458303-857b8cdab3d0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZWdnJTIwa29ybWF8ZW58MHx8MHx8fDA%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'lunch_wed', 
+    name: 'Wednesday Lunch: Fried Fish + Chef Choice Veg + Dal Tadka + Steamed Rice 500gm', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1661939252817-ebb73304f4c7?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGZyaWVkJTIwZmlzaHxlbnwwfHwwfHx8MA%3D%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'lunch_thu', 
+    name: 'Thursday Lunch: Mutton Keema Chole + Chef Choice Veg + Chana Dal Fry + Jeera Rice 500gm', 
+    price: 'Mass Menu', 
+    img: 'https://plus.unsplash.com/premium_photo-1675798917805-bbf2679cc875?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8TXV0dG9uJTIwa2VlbWElMjBjaG9sZXxlbnwwfHwwfHx8MA%3D%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'lunch_fri', 
+    name: 'Friday Lunch: Chicken Biryani + Raitha + Chicken Shorba + Dessert', 
+    price: 'Mass Menu', 
+    img: 'https://plus.unsplash.com/premium_photo-1694141252774-c937d97641da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y2hpY2tlbiUyMGJpcnlhbml8ZW58MHx8MHx8fDA%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'lunch_sat', 
+    name: 'Saturday Lunch: Fried Chicken + Chef Choice Veg + Dal Fry + Steamed Rice 500gm', 
+    price: 'Mass Menu', 
+    img: 'https://plus.unsplash.com/premium_photo-1683139916670-38113db90cb9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZnJpZWQlMjBjaGlja2VufGVufDB8fDB8fHww', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'lunch_sun', 
+    name: 'Sunday Lunch: Egg Aloo + Chef Choice Veg + Steamed Rice 500gm', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1764315197254-94385571df22?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZWdnJTIwbWFzYWxhfGVufDB8fDB8fHww', 
+    category: 'Meals & Deals' 
+  },
+
+  // --- DINNER MENU ---
+  { 
+    id: 'dinner_mon', 
+    name: 'Monday Dinner: Egg Curry + Chef Choice Veg + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1661588669110-81142a5b9e57?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZWdnJTIwY3Vycnl8ZW58MHx8MHx8fDA%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'dinner_tue', 
+    name: 'Tuesday Dinner: Chicken Tandoori + Chef Choice Veg + Dal Tadka + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1641873933980-fcff60026f50?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y2hpY2tlbiUyMHRhbmRvb3JpfGVufDB8fDB8fHww', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'dinner_wed', 
+    name: 'Wednesday Dinner: Aloo Beef Keema + Chef Choice Veg + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1680529669043-9a7777b798bc?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YWxvbyUyMGJlZWYlMjBrZWVtYXxlbnwwfHwwfHx8MA%3D%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'dinner_thu', 
+    name: 'Thursday Dinner: Egg Do Pyaza + Chef Choice Veg + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://media.istockphoto.com/id/1218567719/photo/indian-style-egg-curry-in-a-bowl-on-a-wooden-background.webp?a=1&b=1&s=612x612&w=0&k=20&c=iw5KBWI3Phc_37tRzn5GYo71gEHFmb5yNDdfQujbCiw=', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'dinner_fri', 
+    name: 'Friday Dinner: Akl Albait Chef Choice Vegetable + Dal Fry + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8dmVnZXRhYmxlJTIwc2FsYWR8ZW58MHx8MHx8fDA%3D', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'dinner_sat', 
+    name: 'Saturday Dinner: Chicken Kadai + Chef Choice Veg + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1694579740719-0e601c5d2437?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y2hpY2tlbiUyMGthZGFpfGVufDB8fDB8fHww', 
+    category: 'Meals & Deals' 
+  },
+  { 
+    id: 'dinner_sun', 
+    name: 'Sunday Dinner: Chicken Kabab + Chef Choice Veg + Chana Dal Fry + Steamed Rice 300gm & Phulka Chapati 2 PCs', 
+    price: 'Mass Menu', 
+    img: 'https://images.unsplash.com/photo-1605908580297-f3e1c02e64ff?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2hpY2tlbiUyMGthYmFifGVufDB8fDB8fHww', 
+    category: 'Meals & Deals' 
+  }
+];

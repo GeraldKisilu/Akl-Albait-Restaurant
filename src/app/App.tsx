@@ -3,7 +3,7 @@ import { HashRouter, Routes, Route, Link, useNavigate, useLocation } from "react
 import emailjs from "@emailjs/browser";
 import {
   ShoppingCart, X, Plus, Minus, ChevronRight, ChevronLeft,
-  Clock, Phone, MapPin, Mail, Menu as MenuIcon, ArrowRight, Check, Star,
+  Clock, Phone, MapPin, Mail, Menu as MenuIcon, ArrowRight, Check, Star, CalendarDays,
 } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoImg from "@/imports/albait.png";
@@ -57,50 +57,30 @@ interface UICtx { openMenu: () => void; openBasket: () => void; }
 const CATEGORIES = [...new Set(menuDataItems.map(m => m.category))]
   .filter(c => c !== "Meals & Deals");
 
-type DealKey = "monthly_one" | "monthly_two" | "staff" | "events";
+type DealKey = "monthly_one" | "monthly_two";
 
 const DEAL_ITEMS: Record<DealKey, MenuItem> = {
   monthly_one: {
     id: "deal_monthly_one",
     category: "Meals & Deals",
-    name: "Monthly Meal — One Meal",
+    name: "Monthly Meal — One Meal Option",
     price: 180,
     description: "Monthly meal deal for one meal. Freshly prepared and made to order.",
     image:
-      "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&h=600&fit=crop&auto=format",
+      imageMap["deal_monthly_one"] ?? "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&h=600&fit=crop&auto=format",
     badge: "Monthly",
     featured: true,
   },
   monthly_two: {
     id: "deal_monthly_two",
     category: "Meals & Deals",
-    name: "Monthly Meal — Two Meals",
+    name: "Monthly Meal — Two Meal Option",
     price: 320,
     description: "Monthly meal deal for two meals. Perfect for sharing or planning ahead.",
     image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&h=600&fit=crop&auto=format",
+      imageMap["deal_monthly_two"] ?? "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=900&h=600&fit=crop&auto=format",
     badge: "Monthly",
     featured: true,
-  },
-  staff: {
-    id: "deal_staff",
-    category: "Meals & Deals",
-    name: "Staff Meal",
-    price: 8,
-    description: "Staff meal starting from AED 8. Limited-time staff pricing.",
-    image:
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&h=600&fit=crop&auto=format",
-    badge: "Staff",
-  },
-  events: {
-    id: "deal_events",
-    category: "Meals & Deals",
-    name: "Events Meal",
-    price: 5,
-    description: "Events meal starting from AED 5. Great for groups and celebrations.",
-    image:
-      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=900&h=600&fit=crop&auto=format",
-    badge: "Events",
   },
 };
 
@@ -116,40 +96,49 @@ const MEALS_DEALS: Array<{
   {
     title: "Monthly Meal",
     badge: "Popular",
-    description: "180 AED for one meal. 320 AED for two meals — ideal for regular visits.",
+    description: "180 AED for one meal option. 320 AED for two meal options — ideal for regular visits.",
     image:
       "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=900&h=600&fit=crop&auto=format",
     prices: [
-      { label: "One meal", aed: 180 },
-      { label: "Two meals", aed: 320 },
+      { label: "One meal option", aed: 180 },
+      { label: "Two meal options", aed: 320 },
     ],
     defaultAddKey: "monthly_one",
     quickAdd: [
-      { key: "monthly_one", name: "One meal" },
-      { key: "monthly_two", name: "Two meals" },
+      { key: "monthly_one", name: "One meal option" },
+      { key: "monthly_two", name: "Two meal options" },
     ],
   },
-  {
-    title: "Staff Meal",
-    badge: "Starting from",
-    description: "Staff pricing starts from AED 8. Ask in-store for availability.",
-    image:
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=900&h=600&fit=crop&auto=format",
-    prices: [{ label: "Starting from", aed: 8 }],
-    defaultAddKey: "staff",
-    quickAdd: [{ key: "staff", name: "AED 8" }],
-  },
-  {
-    title: "Events Meal",
-    badge: "Group deal",
-    description: "Events meal starts from AED 5 for group orders and celebrations.",
-    image:
-      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=900&h=600&fit=crop&auto=format",
-    prices: [{ label: "Starting from", aed: 5 }],
-    defaultAddKey: "events",
-    quickAdd: [{ key: "events", name: "AED 5" }],
-  },
 ];
+
+// ─── Weekly Mass Menu Schedule (from menuData.ts) ──────────────────────────
+interface MassMenuItem {
+  id: string;
+  name: string;
+  img: string;
+  type: "lunch" | "dinner";
+  day: string;
+}
+
+const DAY_ORDER = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+const DAY_ORDER_FULL = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+const WEEKLY_MASS_MENU: MassMenuItem[] = menuDataItems
+  .filter(m => m.price === "Mass Menu")
+  .map(m => {
+    const parts = m.id.split("_");
+    const type = parts[0] as "lunch" | "dinner";
+    const dayAbbr = parts[1];
+    const dayIdx = DAY_ORDER.findIndex(d => d.toLowerCase() === dayAbbr);
+    const day = dayIdx >= 0 ? DAY_ORDER_FULL[dayIdx] : dayAbbr;
+    return { id: m.id, name: m.name, img: m.img, type, day };
+  });
+
+const MASS_MENU_BY_DAY = DAY_ORDER_FULL.map(day => ({
+  day,
+  lunch: WEEKLY_MASS_MENU.find(m => m.day === day && m.type === "lunch"),
+  dinner: WEEKLY_MASS_MENU.find(m => m.day === day && m.type === "dinner"),
+}));
 
 const ITEMS: MenuItem[] = [
 
@@ -811,11 +800,14 @@ function MenuPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
     "Meals & Deals",
   ];
 
+  const WEEKLY_DEAL_IDS = new Set(WEEKLY_MASS_MENU.map(m => m.id));
+
   const getCategoryItems = (cat: string) => {
     if (cat === "Meals & Deals") return Object.values(DEAL_ITEMS);
     return ITEMS.filter(i => i.category === cat);
   };
 
+  const isMassMenuDeals = activeCat === "Meals & Deals";
 
   useEffect(() => { if (!open) setTimeout(() => setActiveCat(null), 300); }, [open]);
 
@@ -860,7 +852,9 @@ function MenuPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
             <div className="grid grid-cols-2 gap-4">
               {ALL_MENU_CATEGORIES.map(cat => {
                 const sample = getCategoryItems(cat)[0];
-                const count = getCategoryItems(cat).length;
+                const count = cat === "Meals & Deals"
+                  ? Object.values(DEAL_ITEMS).length + WEEKLY_MASS_MENU.length
+                  : getCategoryItems(cat).length;
 
                 return (
                   <button key={cat} onClick={() => setActiveCat(cat)}
@@ -879,33 +873,62 @@ function MenuPopup({ open, onClose }: { open: boolean; onClose: () => void }) {
             </div>
           </div>
         ) : (
-          <div className="max-w-2xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {catItems.map(item => (
-              <button key={item.id} onClick={() => setSelectedItem(item)}
-                className="group text-left bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl overflow-hidden hover:border-[#D4A853]/40 transition-all hover:shadow-lg hover:shadow-black/40 hover:-translate-y-0.5">
-                <div className="relative h-36 bg-[#1a1208] overflow-hidden">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  {item.badge && <span className="absolute top-2 left-2 bg-[#C8622A] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">{item.badge}</span>}
-                  <div className="absolute bottom-2 right-2 text-[#D4A853] text-xs font-bold bg-[#1C140C]/80 backdrop-blur-sm px-2 py-0.5 rounded-lg">{fmt(item.price)}</div>
+          <div className="max-w-4xl mx-auto space-y-8">
+            {/* Deal items (monthly meal plans) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {catItems.map(item => (
+                <button key={item.id} onClick={() => setSelectedItem(item)}
+                  className="group text-left bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl overflow-hidden hover:border-[#D4A853]/40 transition-all hover:shadow-lg hover:shadow-black/40 hover:-translate-y-0.5">
+                  <div className="relative h-36 bg-[#1a1208] overflow-hidden">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    {item.badge && <span className="absolute top-2 left-2 bg-[#C8622A] text-white text-[10px] font-semibold px-2 py-0.5 rounded-full">{item.badge}</span>}
+                    <div className="absolute bottom-2 right-2 text-[#D4A853] text-xs font-bold bg-[#1C140C]/80 backdrop-blur-sm px-2 py-0.5 rounded-lg">{fmt(item.price)}</div>
+                  </div>
+                  <div className="p-3.5">
+                    <h4 className="font-bold text-[#F2E3C9] text-sm font-['Playfair_Display']">{item.name}</h4>
+                    <p className="text-xs text-[#8b7355] mt-1 line-clamp-2 leading-relaxed">{item.description}</p>
+                    <p className="text-[10px] text-[#C8622A] font-semibold mt-2 flex items-center gap-1 group-hover:gap-1.5 transition-all">
+                      Customize & add <ChevronRight size={10} />
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {/* Weekly Mass Menu Schedule (shown when Meals & Deals is active) */}
+            {isMassMenuDeals && (
+              <div className="bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl p-5">
+                <div className="flex items-center gap-2 mb-4">
+                  <CalendarDays size={15} className="text-[#D4A853]" />
+                  <h3 className="text-sm font-bold text-[#F2E3C9] font-['Playfair_Display']">Weekly Mass Menu Schedule</h3>
                 </div>
-                <div className="p-3.5">
-                  <h4 className="font-bold text-[#F2E3C9] text-sm font-['Playfair_Display']">{item.name}</h4>
-                  <p className="text-xs text-[#8b7355] mt-1 line-clamp-2 leading-relaxed">{item.description}</p>
-                  <p className="text-[10px] text-[#C8622A] font-semibold mt-2 flex items-center gap-1 group-hover:gap-1.5 transition-all">
-                    Customize & add <ChevronRight size={10} />
-                  </p>
+                <p className="text-xs text-[#8b7355] mb-4">Included with your monthly meal plan. Meals change daily.</p>
+                <div className="space-y-2">
+                  {MASS_MENU_BY_DAY.map(({ day, lunch, dinner }) => (
+                    <div key={day} className="flex items-start gap-3 text-xs py-1.5 border-b border-[#D4A853]/8 last:border-0">
+                      <span className="text-[#D4A853] font-bold w-12 flex-shrink-0">{day.slice(0, 3)}</span>
+                      <div className="flex-1 min-w-0">
+                        {lunch && <p className="text-[#F2E3C9]"><span className="text-green-400 text-[10px] uppercase tracking-wider">Lunch:</span> {lunch.name.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) (Lunch|Dinner): /, "")}</p>}
+                        {dinner && <p className="text-[#F2E3C9] mt-0.5"><span className="text-[#D4A853] text-[10px] uppercase tracking-wider">Dinner:</span> {dinner.name.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) (Lunch|Dinner): /, "")}</p>}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </button>
-            ))}
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* Footer CTA */}
-      <div className="px-5 sm:px-8 py-4 border-t border-[#D4A853]/20">
+      <div className="px-5 sm:px-8 py-4 border-t border-[#D4A853]/20 flex gap-3">
         <button onClick={() => { onClose(); navigate("/menu"); }}
-          className="w-full py-3.5 bg-[#C8622A] hover:bg-[#b5541f] text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm">
-          View Full Menu Page <ArrowRight size={15} />
+          className="flex-1 py-3.5 bg-[#C8622A] hover:bg-[#b5541f] text-white rounded-xl font-bold transition-colors flex items-center justify-center gap-2 text-sm">
+          View Full Menu <ArrowRight size={15} />
+        </button>
+        <button onClick={() => { onClose(); navigate("/meals-deals"); }}
+          className="flex-1 py-3.5 border border-[#D4A853]/25 text-[#F2E3C9] hover:border-[#D4A853]/60 hover:bg-[#D4A853]/5 rounded-xl font-semibold transition-colors text-sm flex items-center justify-center gap-2">
+          Meals &amp; Deals <ArrowRight size={15} />
         </button>
       </div>
 
@@ -1296,99 +1319,134 @@ function AboutPage() {
     </div>
   );
 }
-// ─── Menu Page ────────────────────────────────────────────────────────────────
+// ─── Meals & Deals Page ───────────────────────────────────────────────────────
 function MealsDealsPage() {
   const { addItem } = useCart();
+  const [addedFeedback, setAddedFeedback] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Provide a small bridge for the onClick handlers above.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (window as any).__bb_add_deal = (item: MenuItem) => {
-      addItem({
-        cartId: uid(),
-        id: item.id,
-        name: item.name,
-        price: item.price,
-        quantity: 1,
-        customizations: {},
-        note: "",
-        image: item.image,
-      });
-    };
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).__bb_add_deal = undefined;
-    };
-  }, [addItem]);
+  function addDealToCart(item: MenuItem) {
+    addItem({
+      cartId: uid(),
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: 1,
+      customizations: {},
+      note: "",
+      image: item.image,
+    });
+    setAddedFeedback(item.id);
+    setTimeout(() => setAddedFeedback(null), 1200);
+  }
 
   return (
     <div className="min-h-screen bg-[#1C140C]">
+      {/* Header */}
       <div className="pt-[104px] pb-10 px-4 sm:px-6 border-b border-[#D4A853]/15">
         <div className="max-w-7xl mx-auto text-center">
-          <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4A853] mb-2 font-semibold">Monthly Deals · Staff Meal · Events</p>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4A853] mb-2 font-semibold">Monthly Plans · Weekly Menu</p>
           <h1 className="text-4xl font-bold text-[#F2E3C9] font-['Playfair_Display']">Meals & Deals</h1>
-          <p className="text-[#8b7355] mt-2 text-sm">Add these offers to your basket like regular menu items.</p>
+          <p className="text-[#8b7355] mt-2 text-sm">Choose a monthly meal plan or browse our weekly mass menu schedule.</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {MEALS_DEALS.map(d => (
-            <div key={d.title} className="bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl overflow-hidden shadow-sm">
-              <div className="relative h-56 bg-[#1a1208]">
-                <img src={d.image} alt={d.title} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#241a0a]/70 to-transparent" />
-                {d.badge && (
-                  <span className="absolute top-3 left-3 bg-[#C8622A] text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
-                    {d.badge}
-                  </span>
-                )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 space-y-16">
+        {/* ── Monthly Meal Plans ── */}
+        <section>
+          <div className="text-center mb-10">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4A853] mb-2 font-semibold">Subscription Plans</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#F2E3C9] font-['Playfair_Display']">Monthly Meal Plans</h2>
+            <p className="text-[#8b7355] mt-2 text-sm max-w-lg mx-auto">
+              Enjoy freshly prepared meals every day with our convenient monthly subscription.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+            {MEALS_DEALS.map(d => (
+              <div key={d.title} className="bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:border-[#D4A853]/30 transition-all">
+                <div className="relative h-48 bg-[#1a1208]">
+                  <img src={d.image} alt={d.title} className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#241a0a]/70 to-transparent" />
+                  {d.badge && (
+                    <span className="absolute top-3 left-3 bg-[#C8622A] text-white text-[10px] font-semibold px-2.5 py-0.5 rounded-full">
+                      {d.badge}
+                    </span>
+                  )}
+                </div>
+                <div className="p-6">
+                  <h2 className="text-xl font-bold text-[#F2E3C9] font-['Playfair_Display'] mb-2">{d.title}</h2>
+                  <p className="text-sm text-[#8b7355] leading-relaxed mb-5">{d.description}</p>
+                  <div className="space-y-3 mb-6">
+                    {d.prices.map(p => (
+                      <div key={p.label} className="flex items-center justify-between gap-3 py-2 border-b border-[#D4A853]/8">
+                        <span className="text-sm text-[#F2E3C9]">{p.label}</span>
+                        <span className="text-lg font-bold text-[#D4A853]">AED {p.aed}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {d.quickAdd.map(q => (
+                      <button
+                        key={q.name}
+                        onClick={() => addDealToCart(DEAL_ITEMS[q.key])}
+                        className={`w-full py-3 rounded-xl font-bold transition-all text-sm ${
+                          addedFeedback === DEAL_ITEMS[q.key].id
+                            ? "bg-green-600 text-white"
+                            : "bg-[#C8622A] hover:bg-[#b5541f] text-white active:scale-[0.98]"
+                        }`}
+                      >
+                        {addedFeedback === DEAL_ITEMS[q.key].id ? "✓ Added!" : `Add ${q.name} — AED ${DEAL_ITEMS[q.key].price}`}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <div className="p-5">
-                <h2 className="text-xl font-bold text-[#F2E3C9] font-['Playfair_Display'] mb-2">{d.title}</h2>
-                <p className="text-sm text-[#8b7355] leading-relaxed">{d.description}</p>
+            ))}
+          </div>
+        </section>
 
-                <div className="mt-4 space-y-2">
-                  {d.prices.map(p => (
-                    <div key={p.label} className="flex items-center justify-between gap-3 text-sm">
-                      <span className="text-[#8b7355] font-semibold">{p.label}</span>
-                      <span className="text-[#D4A853] font-bold">AED {p.aed}</span>
+        {/* ── Weekly Mass Menu Schedule ── */}
+        <section>
+          <div className="text-center mb-10">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-[#D4A853] mb-2 font-semibold">Weekly Menu</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#F2E3C9] font-['Playfair_Display']">Mass Menu Schedule</h2>
+            <p className="text-[#8b7355] mt-2 text-sm max-w-lg mx-auto">
+              Our rotating weekly menu — fresh meals prepared daily for lunch &amp; dinner. Part of the monthly meal plan.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {MASS_MENU_BY_DAY.map(({ day, lunch, dinner }) => (
+              <div key={day} className="bg-[#241a0a] border border-[#D4A853]/10 rounded-2xl overflow-hidden hover:border-[#D4A853]/25 transition-all">
+                <div className="bg-[#C8622A]/20 px-4 py-3 border-b border-[#D4A853]/10">
+                  <p className="text-[#D4A853] font-bold text-sm font-['Playfair_Display']">{day}</p>
+                </div>
+                <div className="p-4 space-y-4">
+                  {lunch && (
+                    <div className="flex gap-3">
+                      <span className="text-[10px] uppercase tracking-wider text-green-400 font-semibold flex-shrink-0 mt-0.5">Lunch</span>
+                      <div className="min-w-0">
+                        <p className="text-xs text-[#F2E3C9] leading-relaxed">{lunch.name.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) (Lunch|Dinner): /, "")}</p>
+                      </div>
                     </div>
-                  ))}
-                </div>
-
-                <div className="mt-5 flex flex-col gap-2">
-                  {d.quickAdd.map(q => (
-                    <button
-                      key={q.name}
-                      onClick={() => {
-                        const item = DEAL_ITEMS[q.key];
-                        // Use ItemModal-like add (no customizations for deals)
-                        // Cart price is base price.
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (window as any).__bb_add_deal?.(item);
-                      }}
-                      className="w-full py-3 bg-[#C8622A] hover:bg-[#b5541f] text-white rounded-xl font-bold transition-colors text-sm"
-                    >
-                      Add {q.name}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => {
-                      const targetKey = d.defaultAddKey;
-                      const item = DEAL_ITEMS[targetKey];
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (window as any).__bb_add_deal?.(item);
-                    }}
-                    className="w-full py-3 border border-[#D4A853]/25 text-[#F2E3C9] hover:border-[#D4A853]/60 hover:bg-[#D4A853]/5 rounded-xl font-semibold transition-colors text-sm"
-                  >
-                    Quick Add Offer
-                  </button>
+                  )}
+                  {dinner && (
+                    <div className="flex gap-3">
+                      <span className="text-[10px] uppercase tracking-wider text-[#D4A853] font-semibold flex-shrink-0 mt-0.5">Dinner</span>
+                      <div className="min-w-0">
+                        <p className="text-xs text-[#F2E3C9] leading-relaxed">{dinner.name.replace(/^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday) (Lunch|Dinner): /, "")}</p>
+                      </div>
+                    </div>
+                  )}
+                  {(lunch || dinner) && (
+                    <div className="pt-2 border-t border-[#D4A853]/8">
+                      <p className="text-[10px] text-[#8b7355] italic">Included in monthly meal plan</p>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </section>
       </div>
 
       <Footer />
